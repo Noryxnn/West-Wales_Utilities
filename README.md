@@ -1,93 +1,249 @@
-# Team 10 Repo
+# West Wales Utilities - Visitor Management System
 
+A Spring Boot web application for managing visitor requests, locations, and check-ins with QR code functionality and role-based access control.
 
+## Features
 
-## Getting started
+- **User Management**: Registration and authentication with role-based access (Admin, Staff, Visitor)
+- **Location Management**: Manage multiple locations with different types
+- **Request System**: Visitors can request visits to specific locations
+- **QR Code Integration**: Generate and scan QR codes for check-ins
+- **Admin Dashboard**: Comprehensive admin interface for managing the system
+- **Staff Interface**: Staff can scan QR codes and manage visits
+- **Security**: Spring Security with OAuth2 support (Google login)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Prerequisites
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Before running this application, ensure you have the following installed:
 
-## Add your files
+- **Java 17** or higher
+- **MariaDB** database server
+- **Git** (for cloning the repository)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd West-Wales_Utilities
+```
+
+### 2. Install Prerequisites
+
+#### Install Java 17 (macOS)
+```bash
+# Using Homebrew
+brew install openjdk@17
+
+# Verify installation
+java -version
+```
+
+#### Install MariaDB (macOS)
+```bash
+# Using Homebrew
+brew install mariadb
+
+# Start MariaDB service
+brew services start mariadb
+
+# Secure installation (optional but recommended)
+mysql_secure_installation
+```
+
+### 3. Database Setup
+
+#### Start MariaDB
+```bash
+brew services start mariadb
+```
+
+#### Create Database and User
+```bash
+# Connect to MariaDB as root
+mysql -u root -p
+
+# In MariaDB prompt, run:
+CREATE DATABASE IF NOT EXISTS client_project_db;
+CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'comsc';
+GRANT ALL PRIVILEGES ON client_project_db.* TO 'root'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+### 4. Configure OAuth2 (Optional)
+
+The application includes Google OAuth2 integration. To enable it:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing one
+3. Enable Google+ API
+4. Create OAuth2 credentials
+5. Update `src/main/resources/application.properties`:
+   ```properties
+   spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
+   spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
+   ```
+
+**Note**: The application works without OAuth2 configuration using manual login.
+
+## Running the Application
+
+### Method 1: Using Gradle Wrapper (Recommended)
+
+```bash
+# Navigate to project directory
+cd West-Wales_Utilities
+
+# Make gradlew executable (if needed)
+chmod +x gradlew
+
+# Run the application
+./gradlew bootRun
+```
+
+### Method 2: Build and Run JAR
+
+```bash
+# Build the project
+./gradlew build
+
+# Run the JAR file
+java -jar build/libs/Client_Project-0.0.1-SNAPSHOT.jar
+```
+
+### Method 3: Using IDE
+
+1. Import the project into your IDE (IntelliJ IDEA, Eclipse, VS Code)
+2. Run the `ClientProjectApplication.java` main class
+
+## Accessing the Application
+
+Once the application starts successfully, you can access it at:
+
+- **Main URL**: http://localhost:8080
+- **Login Page**: http://localhost:8080/login
+- **Welcome Page**: http://localhost:8080/welcome
+
+## Default User Accounts
+
+The application comes with pre-configured test users:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | jane@doe.com | password123 |
+| Staff | john@doe.com | password123 |
+| Visitor | john@smith.com | password123 |
+
+## Troubleshooting
+
+### Port Already in Use Error
+
+If you get "Port 8080 is already in use":
+
+```bash
+# Find the process using port 8080
+lsof -ti:8080
+
+# Kill the process (replace PID with actual process ID)
+kill -9 <PID>
+
+# Or change the port in application.properties
+echo "server.port=8081" >> src/main/resources/application.properties
+```
+
+### Database Connection Issues
+
+```bash
+# Check if MariaDB is running
+brew services list | grep mariadb
+
+# Start MariaDB if not running
+brew services start mariadb
+
+# Test database connection
+mysql -u root -p -e "SHOW DATABASES;"
+```
+
+### Java Version Issues
+
+```bash
+# Check Java version
+java -version
+
+# Set JAVA_HOME if needed (macOS)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+```
+
+## Additional Commands
+
+### Run Tests
+```bash
+./gradlew test
+```
+
+### Check Code Style
+```bash
+./gradlew checkstyleMain checkstyleTest
+```
+
+### Clean Build
+```bash
+./gradlew clean build
+```
+
+### View Application Logs
+```bash
+tail -f logs/application.log
+```
+
+## Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://git.cardiff.ac.uk/c23069495/team-10-repo.git
-git branch -M main
-git push -uf origin main
+src/
+├── main/
+│   ├── java/uk/ac/cf/spring/client_project/
+│   │   ├── ClientProjectApplication.java    # Main application class
+│   │   ├── admin/                          # Admin controllers
+│   │   ├── location/                       # Location management
+│   │   ├── qrcode/                         # QR code functionality
+│   │   ├── request/                        # Visit request handling
+│   │   ├── security/                       # Security configuration
+│   │   ├── staff/                          # Staff interface
+│   │   ├── user/                           # User management
+│   │   ├── visit/                          # Visit management
+│   │   └── visitor/                        # Visitor interface
+│   └── resources/
+│       ├── application.properties          # Application configuration
+│       ├── schema.sql                      # Database schema
+│       ├── data.sql                        # Initial data
+│       └── templates/                      # Thymeleaf templates
+└── test/                                   # Test files
 ```
 
-## Integrate with your tools
+## Technology Stack
 
-- [ ] [Set up project integrations](https://git.cardiff.ac.uk/c23069495/team-10-repo/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- **Backend**: Spring Boot 3.3.5, Spring Security, Spring Web MVC
+- **Database**: MariaDB with JDBC
+- **Frontend**: Thymeleaf templates, HTML, CSS, JavaScript
+- **Build Tool**: Gradle 8.10.2
+- **Java Version**: 17
+- **QR Code**: Google ZXing library
+- **Authentication**: Spring Security with OAuth2 support
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support and questions, please contact the development team or create an issue in the repository.
