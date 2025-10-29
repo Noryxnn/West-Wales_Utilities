@@ -61,7 +61,7 @@ brew services start mariadb
 
 #### Create Database and User
 ```bash
-# Connect to MariaDB as root
+# Connect to MariaDB as root using "comsc"
 mysql -u root -p
 
 # In MariaDB prompt, run:
@@ -71,22 +71,6 @@ GRANT ALL PRIVILEGES ON client_project_db.* TO 'root'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
-
-### 4. Configure OAuth2 (Optional)
-
-The application includes Google OAuth2 integration. To enable it:
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Google+ API
-4. Create OAuth2 credentials
-5. Update `src/main/resources/application.properties`:
-   ```properties
-   spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
-   spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
-   ```
-
-**Note**: The application works without OAuth2 configuration using manual login.
 
 ## Running the Application
 
