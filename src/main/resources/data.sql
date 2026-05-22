@@ -43,13 +43,13 @@ VALUES
 -- User data
 
 INSERT INTO users (first_name, last_name, password, email, enabled)
-VALUES ('Jane', 'Doe', '$2a$12$M7ZrcwHagw8uqaXMk85yf.sZpsaA7KdbKKXjpeYyVrOVL3R9RmOtG', 'jane@doe.com', true);
+VALUES ('Jane', 'Doe', '$2b$12$PUGfrF/V8ijxVRN68jCZiOzEbhoYEVAki1q4IXRpmWt48pNOk5XNi', 'jane@doe.com', true);
 
 INSERT INTO users (first_name, last_name, password, email, enabled)
-VALUES ('John', 'Doe', '$2a$12$udyY.WPkASmh2yeC/GafMONiBLKHgzE/tUjc4Ly05eqqXXZRwHIjq', 'john@doe.com', true);
+VALUES ('John', 'Doe', '$2b$12$q6aY3L1Yu6.DHi6nB0N9VuL1e47yX/z9IIeJPmJeji9B0ryoL2gfi', 'john@doe.com', true);
 
 INSERT INTO users (first_name, last_name, password, email, enabled)
-VALUES ('John', 'Smith', '$2a$10$YqdzACRpaIFDP2U2bjo2yO250EkJHESG49QQqz/G1UXZHX5AoNABm', 'john@smith.com', true);
+VALUES ('John', 'Smith', '$2b$12$DXOZj2jFruav.RKSeobcjOzfHQ2CR6i8Bui.2zwFQrOcvHt2nS.wa', 'john@smith.com', true);
 
 INSERT INTO roles (role_id, role_name) VALUES (1, 'ADMIN');
 INSERT INTO roles (role_id, role_name) VALUES (2, 'STAFF');
