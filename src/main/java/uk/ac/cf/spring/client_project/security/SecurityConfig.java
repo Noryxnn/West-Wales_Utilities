@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -50,7 +51,12 @@ public class SecurityConfig {
                         .successHandler(customAuthenticationSuccessHandler) // Use provided custom handler
                         .usernameParameter("email")
                         .permitAll())
-                .logout(logout -> logout.permitAll().logoutSuccessUrl("/welcome"));
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl("/welcome")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
 
         return http.build();
     }
