@@ -72,6 +72,29 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
+### 3. QR Code Encryption Setup (Crucial)
+
+The application requires a secret key to encrypt and decrypt QR code data. You must set this as an environment variable before running the app.
+
+## Generate a Key (If you don't have one)
+
+Run this in your terminal to generate a random 256-bit Base64 key:
+```bash
+openssl rand -base64 32
+```
+
+## Set the Environment Variable
+
+## macOS/Linux:
+```bash
+export QR_ENCRYPTION_KEY="your-base64-key-here"
+```
+
+## Windows (Command Prompt):
+```bash
+set QR_ENCRYPTION_KEY=your-base64-key-here
+```
+
 ## Running the Application
 
 ### Method 1: Using Gradle Wrapper (Recommended)
