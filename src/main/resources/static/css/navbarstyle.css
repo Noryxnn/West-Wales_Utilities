@@ -25,10 +25,12 @@ body {
 
 /* Logo Styles */
 .header .logo img {
-    height: 45px; /* Fixed height */
-    width: 60px; /* Maintain aspect ratio */
-    margin: 10px; /* Remove any margins */
-    padding: 2px; /* Remove padding */
+    height: 45px;
+    width: auto;
+    max-width: 180px; 
+    margin: 10px;
+    padding: 2px;
+    display: block;
 }
 
 /* Navigation Bar */
