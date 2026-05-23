@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+
 
 import javax.sql.DataSource;
 
@@ -55,9 +57,11 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/welcome")
                         .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll());
 
+        http.addFilterAfter(new CacheControlFilter(), AuthorizationFilter.class);
         return http.build();
     }
 
